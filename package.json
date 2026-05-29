@@ -1,0 +1,11 @@
+{
+  "name": "tutor-scheduler",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npx vite build",
+    "start": "cd server && node app.js",
+    "deploy": "npm run install:all && npm run build && npm start"
+  }
+}

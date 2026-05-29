@@ -1,0 +1,16 @@
+{
+  "name": "tutor-scheduler-server",
+  "version": "1.0.0",
+  "description": "家教课时管理系统 - 后端",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
