@@ -5,8 +5,8 @@
     <!-- 基本信息 -->
     <view class="card">
       <view class="card-title">基本信息</view>
-      <view class="flex-between mb-8"><text class="text-gray">学号</text><text>{{student.id}}</text></view>
       <view class="flex-between mb-8"><text class="text-gray">姓名</text><text>{{student.name}}</text></view>
+      <view class="flex-between mb-8"><text class="text-gray">手机号</text><text>{{student.phone || '-'}}</text></view>
       <view class="flex-between mb-8"><text class="text-gray">年级</text><text>{{student.grade || '-'}}</text></view>
       <view class="flex-between mb-8"><text class="text-gray">科目</text><text>{{student.subject || '-'}}</text></view>
       <view class="flex-between mb-8"><text class="text-gray">课时费</text><text>¥{{student.default_fee}}/小时</text></view>
