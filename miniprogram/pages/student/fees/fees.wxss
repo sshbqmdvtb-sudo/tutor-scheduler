@@ -1,0 +1,22 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  border-top: 1px solid #e5e7eb;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 100;
+}
+.nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 11px;
+  color: #9ca3af;
+}
+.nav-item.active { color: #4f6ef7; }
+.nav-item .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+.nav-item .nav-label { display: block; }
+.page { padding-bottom: 60px; }

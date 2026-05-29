@@ -19,11 +19,11 @@ router.post('/teacher/login', (req, res) => {
 
 // 学生登录
 router.post('/student/login', (req, res) => {
-  const { id, password } = req.body;
+  const { phone, password } = req.body;
   const db = getDB();
-  const student = db.prepare('SELECT * FROM students WHERE id = ? AND is_active = 1').get(Number(id));
+  const student = db.prepare('SELECT * FROM students WHERE phone = ? AND is_active = 1').get(phone);
   if (!student || student.password !== password) {
-    return res.json({ success: false, message: '学号或密码错误' });
+    return res.json({ success: false, message: '手机号或密码错误' });
   }
   const token = jwt.sign({ id: student.id, role: 'student', name: student.name }, SECRET, { expiresIn: '7d' });
   res.json({
@@ -36,7 +36,8 @@ router.post('/student/login', (req, res) => {
         grade: student.grade,
         subject: student.subject,
         default_fee: student.default_fee,
-        default_people_type: student.default_people_type
+        default_people_type: student.default_people_type,
+        phone: student.phone
       }
     }
   });

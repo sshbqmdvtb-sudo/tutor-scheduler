@@ -27,8 +27,8 @@
     <div class="card">
       <div class="card-title">🎓 学生登录</div>
       <div class="form-group">
-        <label class="form-label">学号</label>
-        <input class="form-input" type="number" v-model="studentForm.id" placeholder="老师给你的学号" />
+        <label class="form-label">手机号</label>
+        <input class="form-input" type="number" v-model="studentForm.phone" placeholder="老师登记的家长手机号" />
       </div>
       <div class="form-group">
         <label class="form-label">密码</label>
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       teacherForm: { username: 'admin', password: 'admin123' },
-      studentForm: { id: '', password: '123456' },
+      studentForm: { phone: '', password: '123456' },
       loading: false
     }
   },
@@ -78,7 +78,7 @@ export default {
       }
     },
     async studentLogin() {
-      if (!this.studentForm.id) return
+      if (!this.studentForm.phone) return
       this.loading = true
       const res = await api.studentLogin(this.studentForm)
       this.loading = false

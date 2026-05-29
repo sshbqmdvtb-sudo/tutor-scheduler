@@ -1,0 +1,69 @@
+<view class="page">
+  <view class="page-bar">
+    <view>
+      <view class="page-title">我的课表</view>
+      <view class="page-sub">{{studentInfo.name}} · {{studentInfo.phone}}</view>
+    </view>
+    <button class="btn btn-outline btn-sm" bindtap="logout">退出</button>
+  </view>
+
+  <!-- 周导航 -->
+  <view class="week-nav">
+    <view class="nav-btn" bindtap="prevWeek">‹</view>
+    <view class="week-label">{{weekLabel}}</view>
+    <view class="nav-btn" bindtap="nextWeek">›</view>
+  </view>
+
+  <view class="today-btn-wrap">
+    <button class="btn btn-sm btn-outline" bindtap="goToday">今天</button>
+  </view>
+
+  <view wx:if="{{loading}}" style="text-align:center;padding:30px;color:#9ca3af;">加载中...</view>
+
+  <block wx:else>
+    <!-- 课表网格 -->
+    <scroll-view scroll-y class="schedule-scroll">
+      <view class="schedule-grid">
+        <!-- 列头 -->
+        <view class="grid-row header-row">
+          <view class="time-header"></view>
+          <view class="day-header {{item.isToday ? 'today' : ''}}" wx:for="{{dayHeaders}}" wx:for-index="idx" wx:key="idx" style="width:{{colWidth}}rpx;">
+            <view class="day-name">{{item.name}}</view>
+            <view class="day-date">{{item.date}}</view>
+          </view>
+        </view>
+
+        <!-- 时间段行 -->
+        <view class="grid-row" wx:for="{{timeSlots}}" wx:for-index="rowIdx" wx:key="rowIdx">
+          <view class="time-label">{{item}}</view>
+          <view class="day-cell {{getCellClass(colIdx, rowIdx)}}" wx:for="{{dayHeaders}}" wx:for-index="colIdx" wx:key="colIdx" style="width:{{colWidth}}rpx;">
+            <view class="schedule-item" wx:for="{{getCellSchedules(colIdx, rowIdx)}}" wx:key="id" wx:if="{{s}}" style="background:{{s.color}};">
+              <text class="s-name">{{s.subject || '上课'}}</text>
+              <text class="s-time">{{s.start_time}}-{{s.end_time}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view style="height:30px;"></view>
+      </view>
+    </scroll-view>
+  </block>
+
+  <view style="height:60px;"></view>
+
+  <!-- 底部导航 -->
+  <view class="bottom-nav">
+    <view class="nav-item active">
+      <view class="nav-icon">📅</view>
+      <view class="nav-label">课表</view>
+    </view>
+    <view class="nav-item" bindtap="goRecords">
+      <view class="nav-icon">📝</view>
+      <view class="nav-label">记录</view>
+    </view>
+    <view class="nav-item" bindtap="goFees">
+      <view class="nav-icon">💰</view>
+      <view class="nav-label">费用</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,62 @@
+<view class="page">
+  <view class="page-bar">
+    <view>
+      <view class="page-title">费用明细</view>
+      <view class="page-sub">{{studentInfo.name}}</view>
+    </view>
+    <button class="btn btn-outline btn-sm" bindtap="logout">退出</button>
+  </view>
+
+  <view wx:if="{{loading}}" style="text-align:center;padding:40px;color:#9ca3af;">加载中...</view>
+
+  <block wx:else>
+    <view class="stat-grid">
+      <view class="stat-card"><view class="stat-value">{{formatMoney(stats.total ? stats.total.total_fee : 0)}}</view><view class="stat-label">总费用</view></view>
+      <view class="stat-card green"><view class="stat-value">{{formatMoney(stats.paid || 0)}}</view><view class="stat-label">已支付</view></view>
+      <view class="stat-card orange"><view class="stat-value">{{formatMoney(stats.unsettled || 0)}}</view><view class="stat-label">未结算</view></view>
+      <view class="stat-card red"><view class="stat-value">{{formatMoney(stats.balance || 0)}}</view><view class="stat-label">应缴余额</view></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">月度统计</view>
+      <view wx:if="{{stats.monthlyStats && stats.monthlyStats.length > 0}}">
+        <view class="list-item" wx:for="{{stats.monthlyStats}}" wx:key="month">
+          <view class="item-main">
+            <view class="item-title">{{item.month}}</view>
+            <view class="item-sub">{{item.class_count}} 次课 · {{formatMinutes(item.total_minutes)}}</view>
+          </view>
+          <view style="font-weight:600;">{{formatMoney(item.total_fee)}}</view>
+        </view>
+      </view>
+      <view wx:else class="empty-state" style="padding:12px;"><text class="empty-text">暂无数据</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">缴费记录</view>
+      <view wx:if="{{payments.length === 0}}" class="empty-state" style="padding:12px;"><text class="empty-text">暂无缴费记录</text></view>
+      <view class="list-item" wx:for="{{payments}}" wx:key="id">
+        <view class="item-main">
+          <view class="item-title" style="color:#22c55e;">+ ¥{{item.amount}}</view>
+          <view class="item-sub">{{item.payment_date}}{{item.note ? ' · ' + item.note : ''}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view style="height:60px;"></view>
+
+  <view class="bottom-nav">
+    <view class="nav-item" bindtap="goSchedule">
+      <view class="nav-icon">📅</view>
+      <view class="nav-label">课表</view>
+    </view>
+    <view class="nav-item" bindtap="goRecords">
+      <view class="nav-icon">📝</view>
+      <view class="nav-label">记录</view>
+    </view>
+    <view class="nav-item active">
+      <view class="nav-icon">💰</view>
+      <view class="nav-label">费用</view>
+    </view>
+  </view>
+</view>

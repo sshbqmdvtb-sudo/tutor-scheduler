@@ -1,0 +1,37 @@
+<view class="page">
+  <view class="page-bar">
+    <view class="page-title">设置</view>
+    <button class="btn btn-outline btn-sm" bindtap="logout">退出</button>
+  </view>
+
+  <view class="card">
+    <view class="card-title">账号信息</view>
+    <view class="flex-between mb-8"><text class="text-gray">用户名</text><text>{{teacherInfo.username}}</text></view>
+    <view class="flex-between mb-8"><text class="text-gray">姓名</text><text>{{teacherInfo.name}}</text></view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">服务器配置</view>
+    <view class="form-group">
+      <text class="form-label">API 服务器地址</text>
+      <input class="form-input" value="{{baseUrl}}" bindinput="onUrlInput" placeholder="http://localhost:3000" />
+      <text class="text-sm text-gray mt-8">部署后需要改成服务器地址，如 https://xxx.zeabur.app</text>
+    </view>
+    <button class="btn btn-primary btn-sm mt-8" bindtap="saveUrl">保存</button>
+  </view>
+
+  <view class="card">
+    <view class="card-title">学生使用指南</view>
+    <view style="font-size:14px;line-height:1.8;color:#6b7280;">
+      <text>1. 学生用学号登录</text>
+      <text>\n2. 默认密码：123456</text>
+      <text>\n3. 可查看课表、上课记录和费用</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">系统信息</view>
+    <view class="flex-between mb-8"><text class="text-gray">版本</text><text>v1.0.0</text></view>
+    <view class="flex-between"><text class="text-gray">数据存储</text><text>服务器 SQLite</text></view>
+  </view>
+</view>

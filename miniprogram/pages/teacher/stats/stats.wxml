@@ -1,0 +1,52 @@
+<view class="page">
+  <view class="page-bar">
+    <view class="page-title">统计报表</view>
+    <picker mode="date" fields="month" value="{{month}}" bindchange="onMonthChange">
+      <view class="form-input" style="width:auto;display:inline-block;">{{month}}</view>
+    </picker>
+  </view>
+
+  <view wx:if="{{loading}}" style="text-align:center;padding:40px;color:#9ca3af;">加载中...</view>
+
+  <block wx:else>
+    <view class="stat-grid">
+      <view class="stat-card"><view class="stat-value">{{stats.monthData ? stats.monthData.total_classes : 0}}</view><view class="stat-label">总课次</view></view>
+      <view class="stat-card green"><view class="stat-value">{{formatMinutes(stats.monthData ? stats.monthData.total_minutes : 0)}}</view><view class="stat-label">总课时</view></view>
+      <view class="stat-card orange"><view class="stat-value">{{formatMoney(stats.monthData ? stats.monthData.total_income : 0)}}</view><view class="stat-label">本月收入</view></view>
+      <view class="stat-card red"><view class="stat-value">{{formatMoney(stats.unsettled || 0)}}</view><view class="stat-label">未结算</view></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">{{monthLabel}} 各学生统计</view>
+      <view wx:if="{{stats.studentStats && stats.studentStats.length > 0}}">
+        <view class="list-item" wx:for="{{stats.studentStats}}" wx:key="id">
+          <view class="item-main">
+            <view class="item-title">{{item.name}}</view>
+            <view class="item-sub">{{item.class_count}} 次 · {{formatMinutes(item.total_minutes)}}</view>
+          </view>
+          <view style="font-weight:600;">{{formatMoney(item.total_fee)}}</view>
+        </view>
+        <view class="list-item" style="border-top:2px solid #e5e7eb;margin-top:8px;padding-top:12px;">
+          <view class="item-main"><text style="font-weight:600;">合计</text></view>
+          <view style="font-weight:700;color:#4f6ef7;">{{formatMoney(stats.monthData ? stats.monthData.total_income : 0)}}</view>
+        </view>
+      </view>
+      <view wx:else class="empty-state" style="padding:12px;"><text class="empty-text">暂无数据</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">近期上课</view>
+      <view wx:if="{{stats.recentRecords && stats.recentRecords.length > 0}}">
+        <view class="list-item" wx:for="{{stats.recentRecords}}" wx:key="id">
+          <view class="item-main">
+            <view class="item-title">{{item.student_name}}</view>
+            <view class="item-sub">{{item.date}} {{item.start_time}}-{{item.end_time}}</view>
+          </view>
+          <text class="text-sm">{{formatMoney(item.total_fee)}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view style="height:20px;"></view>
+</view>

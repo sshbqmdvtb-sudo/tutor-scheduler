@@ -1,0 +1,23 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/teacher/dashboard/dashboard",
+    "pages/teacher/students/students",
+    "pages/teacher/student-detail/student-detail",
+    "pages/teacher/records/records",
+    "pages/teacher/schedule/schedule",
+    "pages/teacher/stats/stats",
+    "pages/teacher/settings/settings",
+    "pages/student/schedule/schedule",
+    "pages/student/records/records",
+    "pages/student/fees/fees"
+  ],
+  "window": {
+    "navigationBarTitleText": "家教课时管理",
+    "navigationBarBackgroundColor": "#4f6ef7",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f5f5"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

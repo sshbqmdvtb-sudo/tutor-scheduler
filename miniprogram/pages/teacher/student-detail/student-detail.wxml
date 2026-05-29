@@ -1,0 +1,192 @@
+<view class="page">
+  <view wx:if="{{!student}}" style="text-align:center;padding:40px;color:#9ca3af;">加载中...</view>
+
+  <block wx:else>
+    <!-- 基本信息 -->
+    <view class="card">
+      <view class="card-title">基本信息</view>
+      <view class="flex-between mb-8"><text class="text-gray">学号</text><text>{{student.id}}</text></view>
+      <view class="flex-between mb-8"><text class="text-gray">姓名</text><text>{{student.name}}</text></view>
+      <view class="flex-between mb-8"><text class="text-gray">年级</text><text>{{student.grade || '-'}}</text></view>
+      <view class="flex-between mb-8"><text class="text-gray">科目</text><text>{{student.subject || '-'}}</text></view>
+      <view class="flex-between mb-8"><text class="text-gray">课时费</text><text>¥{{student.default_fee}}/小时</text></view>
+      <view class="flex-between mb-8"><text class="text-gray">上课类型</text><text>{{student.default_people_type}}</text></view>
+      <view class="flex-between"><text class="text-gray">登录密码</text><text>{{student.password}}</text></view>
+    </view>
+
+    <!-- 统计 -->
+    <view class="stat-grid">
+      <view class="stat-card"><view class="stat-value">{{stats.class_count || 0}}</view><view class="stat-label">总课次</view></view>
+      <view class="stat-card green"><view class="stat-value">{{formatMinutes(stats.total_minutes)}}</view><view class="stat-label">总课时</view></view>
+      <view class="stat-card orange"><view class="stat-value">{{formatMoney(stats.total_fee)}}</view><view class="stat-label">总费用</view></view>
+      <view class="stat-card red"><view class="stat-value">{{formatMoney(unsettled)}}</view><view class="stat-label">未结算</view></view>
+    </view>
+
+    <!-- 固定课表 -->
+    <view class="card">
+      <view class="flex-between">
+        <view class="card-title" style="margin-bottom:0;">固定课表</view>
+        <button class="btn btn-primary btn-sm" bindtap="showAddSchedule">+ 添加</button>
+      </view>
+      <view wx:if="{{schedules.length === 0}}" class="empty-state" style="padding:12px;"><text class="empty-text">暂无固定排课</text></view>
+      <view class="list-item" wx:for="{{schedules}}" wx:key="id">
+        <view class="item-main">
+          <view class="item-title">{{DAYS[item.day_of_week]}}</view>
+          <view class="item-sub">{{item.start_time}} - {{item.end_time}}</view>
+        </view>
+        <button class="btn btn-danger btn-sm" data-id="{{item.id}}" bindtap="deleteSchedule">删除</button>
+      </view>
+    </view>
+
+    <!-- 上课记录 -->
+    <view class="card">
+      <view class="flex-between">
+        <view class="card-title" style="margin-bottom:0;">上课记录</view>
+        <button class="btn btn-primary btn-sm" bindtap="showAddRecord">+ 记上课</button>
+      </view>
+      <view wx:if="{{records.length === 0}}" class="empty-state" style="padding:12px;"><text class="empty-text">暂无上课记录</text></view>
+      <view class="list-item" wx:for="{{records}}" wx:key="id">
+        <view class="item-main">
+          <view class="item-title">{{item.date}} {{item.start_time}}-{{item.end_time}}</view>
+          <view class="item-sub">{{item.people_type}} · {{formatMinutes(item.duration_minutes)}} · ¥{{item.total_fee}}</view>
+          <view wx:if="{{item.content}}" class="item-sub text-sm" style="color:#6b7280;">{{item.content}}</view>
+        </view>
+        <view>
+          <text class="tag {{item.is_settled ? 'tag-success' : 'tag-warning'}}">{{item.is_settled ? '已结' : '未结'}}</text>
+          <button class="btn btn-danger btn-sm mt-8" data-id="{{item.id}}" bindtap="deleteRecord">删除</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 缴费记录 -->
+    <view class="card">
+      <view class="flex-between">
+        <view class="card-title" style="margin-bottom:0;">缴费记录</view>
+        <button class="btn btn-success btn-sm" bindtap="showAddPayment">+ 记缴费</button>
+      </view>
+      <view wx:if="{{payments.length === 0}}" class="empty-state" style="padding:12px;"><text class="empty-text">暂无缴费记录</text></view>
+      <view class="list-item" wx:for="{{payments}}" wx:key="id">
+        <view class="item-main">
+          <view class="item-title">¥{{item.amount}}</view>
+          <view class="item-sub">{{item.payment_date}}{{item.note ? ' · ' + item.note : ''}}</view>
+        </view>
+        <button class="btn btn-danger btn-sm" data-id="{{item.id}}" bindtap="deletePayment">删除</button>
+      </view>
+    </view>
+  </block>
+
+  <view style="height:20px;"></view>
+
+  <!-- 添加排课弹窗 -->
+  <view wx:if="{{showScheduleModal}}" class="modal-overlay" bindtap="hideModals">
+    <view class="modal-content" catchtap="noop">
+      <view style="font-size:18px;font-weight:600;margin-bottom:16px;">添加固定排课</view>
+      <view class="form-group">
+        <text class="form-label">星期</text>
+        <picker mode="selector" range="{{DAYS}}" value="{{scheduleForm.day_of_week}}" bindchange="onScheduleDayChange">
+          <view class="form-input">{{DAYS[scheduleForm.day_of_week]}}</view>
+        </picker>
+      </view>
+      <view class="grid-2">
+        <view class="form-group grid-2-item">
+          <text class="form-label">开始时间</text>
+          <picker mode="time" value="{{scheduleForm.start_time}}" bindchange="onScheduleStartChange">
+            <view class="form-input">{{scheduleForm.start_time}}</view>
+          </picker>
+        </view>
+        <view class="form-group grid-2-item">
+          <text class="form-label">结束时间</text>
+          <picker mode="time" value="{{scheduleForm.end_time}}" bindchange="onScheduleEndChange">
+            <view class="form-input">{{scheduleForm.end_time}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="flex gap-8 mt-16">
+        <button class="btn btn-outline" style="flex:1;" bindtap="hideModals">取消</button>
+        <button class="btn btn-primary" style="flex:1;" bindtap="addSchedule">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加上课记录弹窗 -->
+  <view wx:if="{{showRecordModal}}" class="modal-overlay" bindtap="hideModals">
+    <view class="modal-content" catchtap="noop">
+      <view style="font-size:18px;font-weight:600;margin-bottom:16px;">记录上课</view>
+      <view class="form-group">
+        <text class="form-label">日期</text>
+        <picker mode="date" value="{{recordForm.date}}" bindchange="onRecordDateChange">
+          <view class="form-input">{{recordForm.date}}</view>
+        </picker>
+      </view>
+      <view class="grid-2">
+        <view class="form-group grid-2-item">
+          <text class="form-label">开始</text>
+          <picker mode="time" value="{{recordForm.start_time}}" bindchange="onRecordStartChange">
+            <view class="form-input">{{recordForm.start_time}}</view>
+          </picker>
+        </view>
+        <view class="form-group grid-2-item">
+          <text class="form-label">结束</text>
+          <picker mode="time" value="{{recordForm.end_time}}" bindchange="onRecordEndChange">
+            <view class="form-input">{{recordForm.end_time}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="grid-2">
+        <view class="form-group grid-2-item">
+          <text class="form-label">上课类型</text>
+          <picker mode="selector" range="{{PEOPLE_TYPES}}" value="{{peopleTypeIndex}}" bindchange="onPeopleTypeChange">
+            <view class="form-input">{{recordForm.people_type}}</view>
+          </picker>
+        </view>
+        <view class="form-group grid-2-item">
+          <text class="form-label">人数</text>
+          <input class="form-input" type="number" value="{{recordForm.people_count}}" bindinput="onRecordPeopleCountInput" />
+        </view>
+      </view>
+      <view class="grid-2">
+        <view class="form-group grid-2-item">
+          <text class="form-label">课时费(元/小时)</text>
+          <input class="form-input" type="number" value="{{recordForm.fee_per_hour}}" bindinput="onRecordFeeInput" />
+        </view>
+        <view class="form-group grid-2-item">
+          <text class="form-label">总费用</text>
+          <input class="form-input" type="number" value="{{recordForm.total_fee}}" bindinput="onRecordTotalFeeInput" />
+        </view>
+      </view>
+      <view class="form-group">
+        <text class="form-label">上课内容</text>
+        <input class="form-input" value="{{recordForm.content}}" placeholder="选填" bindinput="onRecordContentInput" />
+      </view>
+      <view class="flex gap-8 mt-16">
+        <button class="btn btn-outline" style="flex:1;" bindtap="hideModals">取消</button>
+        <button class="btn btn-primary" style="flex:1;" bindtap="addRecord">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加缴费弹窗 -->
+  <view wx:if="{{showPaymentModal}}" class="modal-overlay" bindtap="hideModals">
+    <view class="modal-content" catchtap="noop">
+      <view style="font-size:18px;font-weight:600;margin-bottom:16px;">记录缴费</view>
+      <view class="form-group">
+        <text class="form-label">金额</text>
+        <input class="form-input" type="number" value="{{paymentForm.amount}}" bindinput="onPaymentAmountInput" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">缴费日期</text>
+        <picker mode="date" value="{{paymentForm.payment_date}}" bindchange="onPaymentDateChange">
+          <view class="form-input">{{paymentForm.payment_date}}</view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <text class="form-label">备注</text>
+        <input class="form-input" value="{{paymentForm.note}}" placeholder="选填" bindinput="onPaymentNoteInput" />
+      </view>
+      <view class="flex gap-8 mt-16">
+        <button class="btn btn-outline" style="flex:1;" bindtap="hideModals">取消</button>
+        <button class="btn btn-success" style="flex:1;" bindtap="addPayment">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

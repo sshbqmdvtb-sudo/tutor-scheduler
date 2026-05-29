@@ -1,0 +1,43 @@
+<view class="page" style="padding:40px 20px;">
+  <view style="text-align:center;margin-bottom:32px;">
+    <view style="font-size:48px;margin-bottom:8px;">📚</view>
+    <view style="font-size:24px;font-weight:700;">家教课时管理系统</view>
+    <view style="color:#9ca3af;margin-top:4px;font-size:14px;">请选择登录角色</view>
+  </view>
+
+  <!-- 老师登录 -->
+  <view class="card" style="margin-bottom:16px;">
+    <view class="card-title">👨‍🏫 老师登录</view>
+    <view class="form-group">
+      <text class="form-label">用户名</text>
+      <input class="form-input" placeholder="请输入用户名" value="{{teacherForm.username}}" bindinput="onTeacherUserInput" />
+    </view>
+    <view class="form-group">
+      <text class="form-label">密码</text>
+      <input class="form-input" type="password" placeholder="请输入密码" value="{{teacherForm.password}}" bindinput="onTeacherPassInput" />
+    </view>
+    <button class="btn btn-primary" loading="{{loading}}" disabled="{{loading}}" bindtap="teacherLogin">
+      {{loading ? '登录中...' : '老师登录'}}
+    </button>
+  </view>
+
+  <!-- 学生登录 -->
+  <view class="card">
+    <view class="card-title">🎓 学生登录</view>
+    <view class="form-group">
+      <text class="form-label">手机号</text>
+      <input class="form-input" type="number" placeholder="老师登记的家长手机号" value="{{studentForm.phone}}" bindinput="onStudentPhoneInput" />
+    </view>
+    <view class="form-group">
+      <text class="form-label">密码</text>
+      <input class="form-input" type="password" placeholder="默认密码 123456" value="{{studentForm.password}}" bindinput="onStudentPassInput" />
+    </view>
+    <button class="btn btn-success" loading="{{loading}}" disabled="{{loading}}" bindtap="studentLogin">
+      {{loading ? '登录中...' : '学生登录'}}
+    </button>
+  </view>
+
+  <view style="text-align:center;margin-top:16px;color:#d1d5db;font-size:12px;">
+    默认老师账号: admin / admin123
+  </view>
+</view>

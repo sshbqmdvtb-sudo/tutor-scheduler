@@ -1,0 +1,56 @@
+<view class="page">
+  <view class="page-bar">
+    <view>
+      <view class="page-title">上课记录</view>
+      <view class="page-sub">{{studentInfo.name}}</view>
+    </view>
+    <button class="btn btn-outline btn-sm" bindtap="logout">退出</button>
+  </view>
+
+  <view wx:if="{{loading}}" style="text-align:center;padding:40px;color:#9ca3af;">加载中...</view>
+
+  <block wx:else>
+    <view class="stat-grid">
+      <view class="stat-card"><view class="stat-value">{{totalStats.class_count || 0}}</view><view class="stat-label">总课次</view></view>
+      <view class="stat-card green"><view class="stat-value">{{formatMinutes(totalStats.total_minutes)}}</view><view class="stat-label">总课时</view></view>
+    </view>
+
+    <view wx:if="{{records.length === 0}}" class="card">
+      <view class="empty-state">
+        <view class="empty-icon">📝</view>
+        <text class="empty-text">暂无上课记录</text>
+      </view>
+    </view>
+
+    <view class="card" wx:for="{{records}}" wx:key="id">
+      <view class="flex-between">
+        <view>
+          <view style="font-weight:500;">{{item.date}} {{item.start_time}}-{{item.end_time}}</view>
+          <view class="text-sm text-gray mt-8">{{item.people_type}} · {{formatMinutes(item.duration_minutes)}}</view>
+          <view wx:if="{{item.content}}" class="text-sm mt-8" style="color:#6b7280;">{{item.content}}</view>
+        </view>
+        <view style="text-align:right;">
+          <view style="font-weight:600;">¥{{item.total_fee}}</view>
+          <text class="tag {{item.is_settled ? 'tag-success' : 'tag-warning'}}" style="margin-top:4px;display:inline-block;">{{item.is_settled ? '已结算' : '未结算'}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view style="height:60px;"></view>
+
+  <view class="bottom-nav">
+    <view class="nav-item" bindtap="goSchedule">
+      <view class="nav-icon">📅</view>
+      <view class="nav-label">课表</view>
+    </view>
+    <view class="nav-item active">
+      <view class="nav-icon">📝</view>
+      <view class="nav-label">记录</view>
+    </view>
+    <view class="nav-item" bindtap="goFees">
+      <view class="nav-icon">💰</view>
+      <view class="nav-label">费用</view>
+    </view>
+  </view>
+</view>

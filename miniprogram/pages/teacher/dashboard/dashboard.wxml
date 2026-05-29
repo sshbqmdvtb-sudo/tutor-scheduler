@@ -1,0 +1,96 @@
+<view class="page">
+  <view class="page-bar">
+    <view>
+      <view class="page-title">首页</view>
+      <view class="page-sub">欢迎回来，{{teacherInfo.name}}</view>
+    </view>
+    <button class="btn btn-outline btn-sm" bindtap="logout">退出</button>
+  </view>
+
+  <view class="stat-grid">
+    <view class="stat-card">
+      <view class="stat-value">{{stats.studentCount || 0}}</view>
+      <view class="stat-label">学生人数</view>
+    </view>
+    <view class="stat-card green">
+      <view class="stat-value">{{stats.monthData ? stats.monthData.total_classes : 0}}</view>
+      <view class="stat-label">本月上课</view>
+    </view>
+    <view class="stat-card orange">
+      <view class="stat-value">{{formatMoney(stats.monthData ? stats.monthData.total_income : 0)}}</view>
+      <view class="stat-label">本月收入</view>
+    </view>
+    <view class="stat-card red">
+      <view class="stat-value">{{formatMoney(stats.unsettled || 0)}}</view>
+      <view class="stat-label">未结算</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">快捷操作</view>
+    <view style="display:flex;flex-wrap:wrap;gap:10px;">
+      <button class="btn btn-primary btn-sm" style="width:calc(50% - 5px);" bindtap="goAddStudent">➕ 添加学生</button>
+      <button class="btn btn-primary btn-sm" style="width:calc(50% - 5px);" bindtap="goRecords">📝 记上课</button>
+      <button class="btn btn-outline btn-sm" style="width:calc(50% - 5px);" bindtap="goStats">📊 查看统计</button>
+      <button class="btn btn-outline btn-sm" style="width:calc(50% - 5px);" bindtap="goSchedule">📅 课表</button>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">本月各学生统计</view>
+    <view wx:if="{{stats.studentStats && stats.studentStats.length > 0}}">
+      <view class="list-item" wx:for="{{stats.studentStats}}" wx:key="id" data-id="{{item.id}}" bindtap="goStudentDetail">
+        <view class="item-main">
+          <view class="item-title">{{item.name}}</view>
+          <view class="item-sub">{{item.class_count}} 次课 · {{formatMinutes(item.total_minutes)}} · {{formatMoney(item.total_fee)}}</view>
+        </view>
+        <view style="font-size:18px;">→</view>
+      </view>
+    </view>
+    <view wx:else class="empty-state" style="padding:20px;">
+      <text class="empty-text">暂无数据，先去添加学生吧</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">近期上课记录</view>
+    <view wx:if="{{stats.recentRecords && stats.recentRecords.length > 0}}">
+      <view class="list-item" wx:for="{{stats.recentRecords}}" wx:key="id">
+        <view class="item-main">
+          <view class="item-title">{{item.student_name}}</view>
+          <view class="item-sub">{{item.date}} {{item.start_time}}-{{item.end_time}} · {{item.people_type}} · {{formatMoney(item.total_fee)}}</view>
+        </view>
+        <view class="tag {{item.is_settled ? 'tag-success' : 'tag-warning'}}">{{item.is_settled ? '已结算' : '未结'}}</view>
+      </view>
+    </view>
+    <view wx:else class="empty-state" style="padding:20px;">
+      <text class="empty-text">暂无上课记录</text>
+    </view>
+  </view>
+
+  <view style="height:20px;"></view>
+
+  <!-- 底部导航 -->
+  <view class="bottom-nav">
+    <view class="nav-item active" bindtap="goDashboard">
+      <view class="nav-icon">🏠</view>
+      <view class="nav-label">首页</view>
+    </view>
+    <view class="nav-item" bindtap="goStudents">
+      <view class="nav-icon">👥</view>
+      <view class="nav-label">学生</view>
+    </view>
+    <view class="nav-item" bindtap="goRecords">
+      <view class="nav-icon">📝</view>
+      <view class="nav-label">记录</view>
+    </view>
+    <view class="nav-item" bindtap="goStats">
+      <view class="nav-icon">📊</view>
+      <view class="nav-label">统计</view>
+    </view>
+    <view class="nav-item" bindtap="goSettings">
+      <view class="nav-icon">⚙️</view>
+      <view class="nav-label">设置</view>
+    </view>
+  </view>
+</view>
