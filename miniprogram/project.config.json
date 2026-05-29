@@ -33,6 +33,7 @@
     }
   },
   "compileType": "miniprogram",
+  "cloudfunctionRoot": "cloudfunctions/",
   "libVersion": "3.7.2",
   "appid": "wx15e85f10b7202946",
   "projectname": "家教课时管理",

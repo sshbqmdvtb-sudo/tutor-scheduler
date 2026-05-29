@@ -36,6 +36,9 @@ App({
   },
 
   onLaunch() {
+    wx.cloud.init({
+      env: 'YOUR-ENV-ID' // 替换成你的云开发环境ID
+    })
     // 恢复登录状态
     const teacherToken = wx.getStorageSync('teacherToken')
     const teacherInfo = wx.getStorageSync('teacherInfo')

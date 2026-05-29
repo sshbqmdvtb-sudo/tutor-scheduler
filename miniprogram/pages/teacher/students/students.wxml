@@ -15,21 +15,21 @@
     </view>
   </view>
 
-  <view wx:else>
-    <view class="card" wx:for="{{students}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail">
+  <block wx:else>
+    <view class="card" wx:for="{{students}}" wx:key="id">
       <view class="list-item">
-        <view style="width:40px;height:40px;border-radius:50%;background:#eef1ff;display:flex;align-items:center;justify-content:center;font-size:18px;color:#4f6ef7;">{{item.name[0]}}</view>
-        <view class="item-main">
+        <view style="width:40px;height:40px;border-radius:50%;background:#eef1ff;display:flex;align-items:center;justify-content:center;font-size:18px;color:#4f6ef7;" data-id="{{item.id}}" bindtap="goDetail">{{item.name[0]}}</view>
+        <view class="item-main" data-id="{{item.id}}" bindtap="goDetail">
           <view class="item-title">{{item.name}}
             <text wx:if="{{!item.is_active}}" class="tag tag-danger" style="margin-left:6px;">已停用</text>
           </view>
           <view class="item-sub">{{item.grade}} · {{item.subject}} · ¥{{item.default_fee}}/h · {{item.default_people_type}}</view>
           <view wx:if="{{item.phone}}" class="item-sub">{{item.phone}}</view>
         </view>
-        <view style="font-size:18px;">→</view>
+        <button class="btn btn-danger btn-sm" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="deleteStudent">删除</button>
       </view>
     </view>
-  </view>
+  </block>
   <view style="height:20px;"></view>
 
   <!-- 添加学生弹窗 -->

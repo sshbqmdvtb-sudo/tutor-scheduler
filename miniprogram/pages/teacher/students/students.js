@@ -48,5 +48,27 @@ Page({
   goDetail(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({ url: '/pages/teacher/student-detail/student-detail?id=' + id })
-  }
+  },
+
+  async deleteStudent(e) {
+    const id = e.currentTarget.dataset.id
+    const name = e.currentTarget.dataset.name
+    wx.showModal({
+      title: '确认删除',
+      content: '确定删除学生 ' + name + '？该生的所有上课记录、缴费记录和排课都将被删除。',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await api.deleteStudent(id)
+            showToast('已删除')
+            this.load()
+          } catch (err) {
+            showError(err.message || '删除失败')
+          }
+        }
+      }
+    })
+  },
+
+  noop() {}
 })

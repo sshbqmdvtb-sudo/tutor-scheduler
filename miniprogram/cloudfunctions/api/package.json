@@ -1,0 +1,8 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "wx-server-sdk": "~2.6.3"
+  }
+}
