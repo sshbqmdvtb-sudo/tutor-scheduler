@@ -25,20 +25,22 @@
     </view>
   </view>
 
-  <view wx:else class="card" wx:for="{{records}}" wx:key="id">
-    <view class="list-item">
-      <view style="width:40px;height:40px;border-radius:50%;background:#eef1ff;display:flex;align-items:center;justify-content:center;font-size:18px;color:#4f6ef7;">{{item.student_name ? item.student_name[0] : '?'}}</view>
-      <view class="item-main">
-        <view class="item-title">{{item.student_name}}
-          <text class="tag {{item.is_settled ? 'tag-success' : 'tag-warning'}}" style="margin-left:6px;">{{item.is_settled ? '已结' : '未结'}}</text>
+  <block wx:else>
+    <view class="card" wx:for="{{records}}" wx:key="id">
+      <view class="list-item">
+        <view style="width:40px;height:40px;border-radius:50%;background:#eef1ff;display:flex;align-items:center;justify-content:center;font-size:18px;color:#4f6ef7;">{{item.student_name ? item.student_name[0] : '?'}}</view>
+        <view class="item-main">
+          <view class="item-title">{{item.student_name}}
+            <text class="tag {{item.is_settled ? 'tag-success' : 'tag-warning'}}" style="margin-left:6px;">{{item.is_settled ? '已结' : '未结'}}</text>
+          </view>
+          <view class="item-sub">{{item.date}} {{item.start_time}}-{{item.end_time}}</view>
+          <view class="item-sub">{{item.people_type}} · {{formatMinutes(item.duration_minutes)}} · ¥{{item.total_fee}}</view>
+          <view wx:if="{{item.content}}" class="text-sm" style="color:#6b7280;margin-top:2px;">{{item.content}}</view>
         </view>
-        <view class="item-sub">{{item.date}} {{item.start_time}}-{{item.end_time}}</view>
-        <view class="item-sub">{{item.people_type}} · {{formatMinutes(item.duration_minutes)}} · ¥{{item.total_fee}}</view>
-        <view wx:if="{{item.content}}" class="text-sm" style="color:#6b7280;margin-top:2px;">{{item.content}}</view>
+        <button class="btn btn-danger btn-sm" data-id="{{item.id}}" bindtap="deleteRecord">删除</button>
       </view>
-      <button class="btn btn-danger btn-sm" data-id="{{item.id}}" bindtap="deleteRecord">删除</button>
     </view>
-  </view>
+  </block>
 
   <view style="height:20px;"></view>
 
